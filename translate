@@ -19,6 +19,8 @@ my $text;
 my %langs = (ru => "en-", en => "ru-");
 GetOptions("l=s" => \$language, "t=s" => \$text);
 $language = $langs{$language}.$language;
+$text = decode("utf8", $text);
+
 
 my $key_file_path = "/home/gnupinguin/Documents/Keys/yandex_translate_key.txt";
 open(my $key_file, $key_file_path) or die "I can't open key_file";
@@ -31,7 +33,7 @@ my $response = $userAgent->post($url);
 say $response->error_as_HTML unless $response->is_success;
 
 $response->as_string =~ m{<text>(.*)</text>}s;
-$text = decode("utf8", $1);
-
+$text = $1;
+$text = decode("utf8", $text);
 say $text;
 
