@@ -6,4 +6,4 @@ translate -l [destination language] -t [word or "multi words text"]
 <br>
 <h3>create_perl</h3> 
 make finished perl files;<br/>
-create_perl list_filenames
+create_perl list filenames
