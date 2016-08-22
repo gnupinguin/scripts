@@ -1,0 +1,37 @@
+#!/usr/bin/env perl
+use 5.014;
+use strict;
+use warnings;
+use utf8;
+use open qw/:encoding(UTF-8) :std/;
+use LWP::UserAgent;
+use Getopt::Long;
+use Encode;
+#
+#This script translate from russian to english or conversely
+#parameters: -l[destination language] -t[next_text]  
+#destination_language = ru or en; 
+#next_text = word or 'some text with multy words'
+#
+
+my $language;
+my $text;
+my %langs = (ru => "en-", en => "ru-");
+GetOptions("l=s" => \$language, "t=s" => \$text);
+$language = $langs{$language}.$language;
+
+my $key_file_path = "/home/gnupinguin/Documents/Keys/yandex_translate_key.txt";
+open(my $key_file, $key_file_path) or die "I can't open key_file";
+my $key = <$key_file>;
+chomp $key;
+my $userAgent = LWP::UserAgent->new(agent => 'perl post');
+my $url = "https://translate.yandex.net/api/v1.5/tr/translate?key=$key&text=$text&lang=$language";
+
+my $response = $userAgent->post($url);
+say $response->error_as_HTML unless $response->is_success;
+
+$response->as_string =~ m{<text>(.*)</text>}s;
+$text = decode("utf8", $1);
+
+say $text;
+

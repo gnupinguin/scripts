@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use 5.014;
+use File::Copy;
+
+die "Filename not found!\n" if @ARGV == 0;
+
+foreach my $filename(@ARGV){
+	die "File $filename already exist!\n" if -e $filename;
+	copy("/home/gnupinguin/Templates/Perl", "$filename") or die $!;
+	chmod 0777, $filename;
+} 
+
