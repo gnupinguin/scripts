@@ -19,6 +19,7 @@ my $text;
 my %langs = (ru => "en-", en => "ru-");
 GetOptions("l=s" => \$language, "t=s" => \$text);
 $language = $langs{$language}.$language;
+$text = "$text @ARGV";#if words more than 1
 $text = decode("utf8", $text);
 
 
@@ -26,6 +27,7 @@ my $key_file_path = "/home/gnupinguin/Documents/Keys/yandex_translate_key.txt";
 open(my $key_file, $key_file_path) or die "I can't open key_file";
 my $key = <$key_file>;
 chomp $key;
+
 my $userAgent = LWP::UserAgent->new(agent => 'perl post');
 my $url = "https://translate.yandex.net/api/v1.5/tr/translate?key=$key&text=$text&lang=$language";
 
