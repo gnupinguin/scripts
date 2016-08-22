@@ -9,7 +9,16 @@ die "Filename not found!\n" if @ARGV == 0;
 
 foreach my $filename(@ARGV){
 	die "File $filename already exist!\n" if -e $filename;
-	copy("/home/gnupinguin/Templates/Perl", "$filename") or die $!;
+	copy(DATA, "$filename") or die $!;
 	chmod 0777, $filename;
 } 
+__DATA__
+#!/usr/bin/env perl
+use 5.014;
+use strict;
+use warnings;
+use utf8;
+use open qw/:encoding(UTF-8) :std/;
+
+
 
