@@ -9,7 +9,7 @@ use Schedule::Cron;
 
 my $cron = Schedule::Cron;
 $cron->add_entry("*/25 * * * *", \&minimaze_window);
-
+$cron->run;
 
 sub minimaze_window{
 	system "wmctrl -k on";
