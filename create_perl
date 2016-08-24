@@ -1,6 +1,4 @@
-
 #!/usr/bin/env perl
-
 use strict;
 use warnings;
 use 5.014;
@@ -8,11 +6,15 @@ use File::Copy;
 
 die "Filename not found!\n" if @ARGV == 0;
 
+my $data = "";
+$data .= $_  for(<DATA>);
 foreach my $filename(@ARGV){
 	die "File $filename already exist!\n" if -e $filename;
-	copy(DATA, "$filename") or die $!;
+	open (my $file, ">$filename") or die "not open $filename :-(\n$!";
+	print $file $data;
 	chmod 0777, $filename;
 } 
+
 __DATA__
 #!/usr/bin/env perl
 use 5.014;
