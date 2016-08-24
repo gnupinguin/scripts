@@ -8,7 +8,7 @@ use Tk;
 use Schedule::Cron;
 
 my $cron = Schedule::Cron-> new(sub{});
-$cron->add_entry("*/1 * * * *", \&minimaze_window);
+$cron->add_entry("*/25 * * * *", \&minimaze_window);
 $cron->run;
 
 sub minimaze_window{
