@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+use 5.014;
+use strict;
+use warnings;
+use utf8;
+use open qw/:encoding(UTF-8) :std/;
+use Tk;
+use Schedule::Cron;
+
+my $cron = Schedule::Cron;
+$cron->add_entry("*/25 * * * *", \&minimaze_window);
+
+
+sub minimaze_window{
+	system "wmctrl -k on";
+	my $mw = MainWindow->new;
+	$mw->geometry("300x100");
+	$mw->title("Забота о вашх глазах");
+        
+	$mw->Label(-text => 'Вам нужно перерваться на 5 минут')->pack();    
+    
+	$mw->Button(-text => "Закрыть", -command =>sub{exit})->pack();
+	
+	$mw->after(300_000, sub{exit});
+      
+	MainLoop;
+}
