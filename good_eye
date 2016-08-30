@@ -7,8 +7,11 @@ use open qw/:encoding(UTF-8) :std/;
 use Tk;
 use Schedule::Cron;
 
+open STDOUT, "/dev/null";
+#die if `ps -u $ENV{USER}` ~~ /Schedule/;
+
 my $cron = Schedule::Cron-> new(sub{});
-$cron->add_entry("*/25 * * * *", \&minimaze_window);
+$cron->add_entry("*/25 * * * *", \&minimaze_window, -loglevel => 3);
 $cron->run;
 
 sub minimaze_window{

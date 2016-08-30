@@ -7,7 +7,7 @@ use File::Copy;
 die "Filename not found!\n" if @ARGV == 0;
 
 my $data = "";
-$data .= $_  for(<DATA>);
+$data = join '', <DATA>;
 foreach my $filename(@ARGV){
 	die "File $filename already exist!\n" if -e $filename;
 	open (my $file, ">$filename") or die "not open $filename :-(\n$!";
