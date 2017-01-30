@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+use utf8;
+use warnings;
+use open qw/:encoding(UTF-8) :std/;
+use Mojolicious::Lite;
+use File::Basename;
+use Encode qw(decode);
+plugin 'RenderFile';
+
+
+our $CD="/cd";
+our $DOWNLOAD = '/download';
+our $ROOT_DIR = substr $ENV{SERVER_ROOT_PATH}, 0, -1;
+
+get '/' => sub {
+  my $self = shift;
+  $self->redirect_to('/cd/');
+};
+
+get "$CD/:path2dir"=> [path2dir => qr/.*/] => sub {#
+  # say "\nI'M HERE!\n";
+  my $self = shift;
+  # say $self->param('foo')."\n";
+  my $path2dir = $self->param('path2dir');
+
+  # say "\n$path2dir\n";
+
+  $path2dir = '/'.$path2dir unless $path2dir =~ m{^/.*};
+  $path2dir .= '/' unless $path2dir =~ m{.*/$};
+  #now $path2dir has format '/some_path/'
+  # say "\n$path2dir\n";
+
+
+  if (-d $ROOT_DIR.$path2dir){
+    opendir (my $serverPath, $ROOT_DIR.$path2dir) or die "CAN'T OPEN DIR";
+    # my $serverPath = IO::Dir->new($ROOT_DIR.$path2dir) or die "CAN'T OPEN DIR";
+    # my @allFiles = sort readdir($serverPath);
+    my @allFiles = sort readdir($serverPath);
+    @allFiles = (@allFiles)[2..$#allFiles];#remove . and ..
+    my @dirs;
+    my @files;
+    for(@allFiles){
+      # say "\n".decode('utf8', $ROOT_DIR.$path2dir.$_)."\n";
+      $_ = decode('utf8', $_);
+       if (-d $ROOT_DIR.$path2dir.$_){
+         push @dirs, [$_, $CD.$path2dir.$_];#[name, link]
+       }else{
+         push @files, [$_, $DOWNLOAD.$path2dir.$_];#[name, link]
+       }
+    }
+    $self->render(template => "data", dirs => \@dirs, files => \@files, back_link => dirname($CD.$path2dir).'/');
+  } else {
+    $self->render(text => "Document '$path2dir' not  found");
+  }
+
+};
+
+get "$DOWNLOAD/:file*" => sub {
+  my $self = shift;
+  my $file = $self->param('file');
+  $self->render_file('filepath' => "$ENV{SERVER_ROOT_PATH}$file");
+};
+
+app->start;

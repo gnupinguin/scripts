@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>File</title>
+   </head>
+
+<body>
+  <h1 align="center">MY COLLECTION</h1><br>
+
+
+ %foreach my $dir(@$dirs){
+  <a href="<%= @$dir[1] %>"> <h4 align="left"><%= @$dir[0] %></h4> </a>
+
+ %}
+ %foreach my $file(@$files){
+  <a href="<%= @$file[1] %>" download> <h4 align="left"><%= @$file[0] %></h4> </a>
+
+ %}
+
+  <a href="<%= $back_link %>"> <h4 align="left">Back</h4> </a>
+  <a href="/cd/"> <h4 align="left">Home</h4> </a>
+</body>
+</html>
