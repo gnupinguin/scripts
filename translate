@@ -9,20 +9,15 @@ use Getopt::Long;
 use Encode;
 #
 #This script translate text(from STDIN) from russian to english or conversely
-#parameters: -l[destination language]  
+#parameters: -l[destination language] -k[path_2_yandex_translation_key]
 #destination_language = ru or en; 
-#example: echo "Hello, World!" | ./translate -l ru
+#example of usage: echo "Hello, World!" | ./translate -f en -t ru -k your_yandex_translation_key
 #
 
-my $language;
-my %langs = (ru => "en-", en => "ru-");
-GetOptions("l=s" => \$language);
-$language = $langs{$language}.$language;
+my ($from_language, $to_language, $key);
+GetOptions("f=s" => \$from_language, "t=s" => \$to_language, "k=s" => \$key);
+my $language = "$from_language-$to_language";
 
-my $key_file_path = "$ENV{HOME}/Documents/Keys/yandex_translate_key.txt";
-open(my $key_file, $key_file_path) or die "I can't open key_file";
-my $key = <$key_file>;
-chomp $key;
 my $userAgent = LWP::UserAgent->new(agent => 'perl post');
 
 while(<>) {
