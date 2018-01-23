@@ -14,7 +14,7 @@ for (@ARGV){
 
 # say join "\n", $title, $track, $artist, $album, $comment, $year, $genre;
   for my $op($title, $track, $artist, $album, $comment, $year, $genre){
-    $op = decode("cp1251", $op);
+    $op = decode("cp1251", $op) unless Encode::is_utf8($op);
   }
 
 
