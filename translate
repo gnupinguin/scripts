@@ -8,26 +8,36 @@ use LWP::UserAgent;
 use Getopt::Long;
 use Encode;
 #
-#This script translate text(from STDIN) from russian to english or conversely
-#parameters: -l[destination language] -k[path_2_yandex_translation_key]
-#destination_language = ru or en; 
-#example of usage: echo "Hello, World!" | ./translate -f en -t ru -k your_yandex_translation_key
-#
+#This script translate text.
+#Parameters: -from[source language] -to[destination_language] -key[path_2_yandex_translation_key] [-text[text_line]]
+#Example of source language/ destination_language: ru; 
+#For translation from STDIN, you can use pipline(see example)
+#examples of usage: 
+# $ echo "Hello, World!" | ./translate -from en -to ru -key your_yandex_translation_key
+# $ /translate -from en -to ru -key your_yandex_translation_key -text "Hello, World!"
 
-my ($from_language, $to_language, $key);
-GetOptions("f=s" => \$from_language, "t=s" => \$to_language, "k=s" => \$key);
+my ($from_language, $to_language, $key, $text);
+GetOptions("from=s" => \$from_language, "to=s" => \$to_language, "key=s" => \$key, "text:s" => \$text);
 my $language = "$from_language-$to_language";
 
 my $userAgent = LWP::UserAgent->new(agent => 'perl post');
 
-while(<>) {
-   my $url = "https://translate.yandex.net/api/v1.5/tr/translate?key=$key&text=$_&lang=$language";
-   my $response = $userAgent->post($url);
-   say $response->error_as_HTML unless $response->is_success;
-   $response->as_string =~ m{<text>(.*)</text>}s;
-   my $text = $1;
-   $text = decode("utf8", $text);
-   print $text;
+my @textLines = $text ? split "\n", $text : join "", <>;
+
+for (@textLines) {
+	chomp;
+	say translate_line($_)
+}
+
+
+sub translate_line {
+	my $text = $_[0];
+	my $url = "https://translate.yandex.net/api/v1.5/tr/translate?key=$key&text=$_&lang=$language";
+	my $response = $userAgent->post($url);
+	say $response->error_as_HTML unless $response->is_success;
+	$response->as_string =~ m{<text>(.*)</text>}s;
+	my $translated = $1;
+	return decode("utf8", $translated);
 }
 
 
