@@ -1,7 +1,7 @@
 # scripts
  Some useful scripts
 <h3>translate</h3> 
-translate text from russian to english or conversely; You need to add path to key_file at this script<br/>
+Translate text.<br/>
 <code>$ ./translate -from[source_language] -to[destination_language] -key[yandex_translation_key] [-text[text_line]]</code><br/>
 <h3>create_perl</h3> 
 make finished perl files;<br/>
