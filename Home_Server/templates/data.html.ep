@@ -6,7 +6,7 @@
    </head>
 
 <body>
-  <h1 align="center">MY COLLECTION</h1><br>
+  <h1 align="center">FILES COLLECTION</h1><br>
 
 
  %foreach my $dir(@$dirs){
